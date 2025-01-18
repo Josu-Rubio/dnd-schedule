@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.0",
+    "express-session": "^1.18.1",
     "mongoose": "^8.9.5",
     "next": "15.1.5",
+    "passport": "^0.7.0",
     "passport-discord": "^0.1.4",
     "react": "^19.0.0",
     "react-calendar": "^5.1.0",

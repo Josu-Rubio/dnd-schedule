@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
@@ -10,11 +10,33 @@ interface DayVotes {
   green: number;
   yellow: number;
 }
-
+interface User {
+  username: string;
+  avatar: string | null;
+  email: string;
+}
 export default function Home() {
   const [selectedDays, setSelectedDays] = useState<Record<string, DayState>>({});
   const [dayVotes, setDayVotes] = useState<Record<string, DayVotes>>({});
   const [hoveredDay, setHoveredDay] = useState<string | null>(null);
+
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const response = await fetch("/api/auth/user");
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    }
+
+    fetchUser();
+  }, []);
 
   const toggleDayState = (date: Date) => {
     const dayKey = date.toLocaleDateString("en-CA");
@@ -57,7 +79,21 @@ export default function Home() {
     <div className="h-screen w-screen flex flex-col">
       <nav className="bg-gray-800 text-white p-4 flex justify-between items-center">
         <h1 className="text-xl font-bold">D&D Scheduler</h1>
-        <button className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700">Login</button>
+        {user ? (
+          <div className="flex items-center space-x-2">
+            {user.avatar && (
+              <img src={user.avatar} alt="Avatar" className="w-8 h-8 rounded-full" />
+            )}
+            <span>{user.username}</span>
+          </div>
+        ) : (
+          <a
+            href="/api/auth/discord"
+            className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Login with Discord
+          </a>
+        )}
       </nav>
 
       <main className="flex-grow flex flex-col justify-center items-center">
