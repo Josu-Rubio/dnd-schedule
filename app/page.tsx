@@ -18,18 +18,32 @@ export default function Home() {
 
   const toggleDayState = (date: Date) => {
     const dayKey = date.toLocaleDateString("en-CA");
+
     setSelectedDays((prev) => {
       const currentState = prev[dayKey] || "none";
       const nextState = currentState === "none" ? "green" : currentState === "green" ? "yellow" : "none";
+
+      // Update votes
+      setDayVotes((prevVotes) => {
+        const currentVotes = prevVotes[dayKey] || { green: 0, yellow: 0 };
+        const newVotes = { ...currentVotes };
+
+        if (nextState === "green") {
+          newVotes.green += 0.5;
+        } else if (nextState === "yellow") {
+          newVotes.green -= 0.5;
+          newVotes.yellow += 0.5;
+        } else {
+          newVotes.yellow -= 0.5;
+        }
+
+        return { ...prevVotes, [dayKey]: newVotes };
+      });
+
       return { ...prev, [dayKey]: nextState };
     });
-    setHoveredDay(dayKey)
-  };
 
-  const getHoveredDayVotes = () => {
-    if (!hoveredDay) return null;
-    const votes = dayVotes[hoveredDay] || { green: 0, yellow: 0 };
-    return votes;
+    setHoveredDay(dayKey);
   };
 
   const formatDate = (dateString: string) => {
@@ -47,7 +61,6 @@ export default function Home() {
       </nav>
 
       <main className="flex-grow flex flex-col justify-center items-center">
-
         <Calendar
           onClickDay={toggleDayState}
           tileContent={({ date }) => {
@@ -71,12 +84,14 @@ export default function Home() {
         <div className="mt-4 p-4 w-full max-w-2xl bg-gray-100 rounded-md shadow-sm">
           {hoveredDay ? (
             <div>
-              <h2 className="text-lg font-semibold mb-2">Votos para el {formatDate(hoveredDay)}</h2>
+              <h2 className="text-lg font-semibold mb-2">
+                Votos para el {formatDate(hoveredDay)}
+              </h2>
               <p>
-                <span className="text-green-600 font-bold">Perfecto!:</span> {getHoveredDayVotes()?.green || 0}
+                <span className="text-green-600 font-bold">Perfecto!:</span> {dayVotes[hoveredDay]?.green || 0}
               </p>
               <p>
-                <span className="text-yellow-600 font-bold">Quizá:</span> {getHoveredDayVotes()?.yellow || 0}
+                <span className="text-yellow-600 font-bold">Quizá:</span> {dayVotes[hoveredDay]?.yellow || 0}
               </p>
             </div>
           ) : (
