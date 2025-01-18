@@ -47,10 +47,12 @@ export async function GET(req: NextRequest) {
   const userResponse = await fetch(discordUserUrl, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
-
+  console.log("userResponse", userResponse)
   if (!userResponse.ok) {
     return NextResponse.json({ error: "Failed to fetch user info" }, { status: 500 });
   }
+
+
 
   const userData = await userResponse.json();
 
@@ -62,7 +64,7 @@ export async function GET(req: NextRequest) {
       : null,
     email: userData.email,
   };
-
+  console.log("userInfo", userInfo)
   // Step 4: Store user info in an HTTP-only cookie
   const response = NextResponse.redirect(new URL("/", req.url));
   response.cookies.set("user", JSON.stringify(userInfo), {
@@ -70,6 +72,7 @@ export async function GET(req: NextRequest) {
     httpOnly: true, // Ensures cookie isn't accessible to client-side scripts
     secure: true, // Ensures cookie is sent over HTTPS
   });
+  console.log("response", response)
 
   return response;
 }
