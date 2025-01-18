@@ -1,5 +1,6 @@
 "use client";
 
+import Link from 'next/link';
 import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -87,12 +88,12 @@ export default function Home() {
             <span>{user.username}</span>
           </div>
         ) : (
-          <a
+          <Link
             href="/api/auth/discord"
             className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
           >
             Login with Discord
-          </a>
+          </Link>
         )}
       </nav>
 

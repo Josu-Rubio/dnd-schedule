@@ -6,7 +6,7 @@ export async function GET(req: Request) {
     .split("; ")
     .find((cookie) => cookie.startsWith("user="));
   const user = userCookie ? JSON.parse(decodeURIComponent(userCookie.split("=")[1])) : null;
-  console.log("user", user)
+
   if (!user) {
     return NextResponse.json({ error: "User not logged in" }, { status: 401 });
   }
