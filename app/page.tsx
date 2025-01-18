@@ -29,12 +29,12 @@ export default function Home() {
         const newVotes = { ...currentVotes };
 
         if (nextState === "green") {
-          newVotes.green += 0.5;
+          newVotes.green += 1;
         } else if (nextState === "yellow") {
-          newVotes.green -= 0.5;
-          newVotes.yellow += 0.5;
+          newVotes.green -= 1;
+          newVotes.yellow += 1;
         } else {
-          newVotes.yellow -= 0.5;
+          newVotes.yellow -= 1;
         }
 
         return { ...prevVotes, [dayKey]: newVotes };
