@@ -6,14 +6,17 @@ import "react-calendar/dist/Calendar.css";
 
 type DayState = "none" | "green" | "yellow";
 
+interface UserVote {
+    userId: string;
+    username: string;
+    avatar: string | null;
+    state: DayState;
+}
+
 interface DayVotes {
     green: number;
     yellow: number;
-}
-
-interface UserVote {
-    userId: string;
-    state: DayState;
+    votes: UserVote[]; // Include user votes in the type
 }
 
 interface DayData {
@@ -38,7 +41,6 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ user }) => {
 
 
     useEffect(() => {
-        // Fetch existing day data
         const fetchDays = async () => {
             const res = await fetch("/api/calendar");
             const data: DayData[] = await res.json();
@@ -47,7 +49,11 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ user }) => {
             const userSelections: Record<string, DayState> = {};
 
             data.forEach((day) => {
-                votes[day.date] = { green: day.green, yellow: day.yellow };
+                votes[day.date] = {
+                    green: day.green,
+                    yellow: day.yellow,
+                    votes: day.votes, // Populate votes array
+                };
 
                 // Find the user's vote for this day
                 const userVote = day.votes.find((vote) => vote.userId === user.id);
