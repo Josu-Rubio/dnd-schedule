@@ -1,5 +1,6 @@
 "use client";
 
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Home() {
@@ -11,16 +12,18 @@ export default function Home() {
 
         <Link
           href="/api/auth/discord"
-          className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
+          className="bg-violet-900 px-4 py-2 rounded hover:bg-violet-950"
         >
-          Login with Discord
+          Discord Login
         </Link>
 
       </nav>
-
-      <main className="flex-grow flex flex-col justify-center items-center">
-
+      <main className="flex-grow flex flex-col justify-end items-center bg-center" style={{ backgroundImage: 'url(/background.jpg)' }}>
+        <h2 className="text-white text-3xl mb-8 font-bold" style={{ textShadow: "2px 2px #000000" }}>
+          Bienvenido al calendario
+        </h2>
       </main>
+
     </div>
   );
 }

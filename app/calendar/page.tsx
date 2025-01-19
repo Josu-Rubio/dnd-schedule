@@ -27,7 +27,7 @@ const CalendarPage = async () => {
 
                 </nav>
                 <div className="h-screen flex flex-col items-center justify-center">
-                    <p>Bienvenido!</p>
+
                     <Loader />
 
                 </div>
