@@ -41,7 +41,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ user }) => {
 
 
     useEffect(() => {
-        const fetchDays = async () => {
+        const fetchVotes = async () => {
             const res = await fetch("/api/calendar");
             const data: DayData[] = await res.json();
 
@@ -66,7 +66,14 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ user }) => {
             setSelectedDays(userSelections);
         };
 
-        fetchDays();
+        // Polling interval (every 5 seconds)
+        const interval = setInterval(fetchVotes, 5000);
+
+        // Initial fetch
+        fetchVotes();
+
+        // Clean up interval on component unmount
+        return () => clearInterval(interval);
     }, [user.id]);
 
     const toggleDayState = async (date: Date) => {
@@ -126,6 +133,16 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ user }) => {
                         avatar: user.avatar,
                     }),
                 }).catch((err) => console.error("Failed to update vote:", err));
+            } else {
+                // If the state is "none", trigger the DELETE method
+                fetch("/api/calendar", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        date: dayKey,
+                        userId: user.id,
+                    }),
+                }).catch((err) => console.error("Failed to delete vote:", err));
             }
 
             return { ...prev, [dayKey]: nextState };

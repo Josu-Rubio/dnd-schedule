@@ -27,14 +27,14 @@ export async function GET() {
         const days = await DayModel.find();
 
         const formattedDays = days.map((day) => {
-            const green = day.votes.filter((vote: { state: string; }) => vote.state === "green").length;
-            const yellow = day.votes.filter((vote: { state: string; }) => vote.state === "yellow").length;
+            const greenVotes = day.votes.filter((vote: { state: string }) => vote.state === 'green').length;
+            const yellowVotes = day.votes.filter((vote: { state: string }) => vote.state === 'yellow').length;
 
             return {
                 date: day.date,
-                green,
-                yellow,
-                votes: day.votes, // Include raw votes for user-specific data
+                green: greenVotes,
+                yellow: yellowVotes,
+                votes: day.votes,
             };
         });
 
@@ -53,15 +53,20 @@ export async function POST(req: Request) {
         const day = await DayModel.findOne({ date });
 
         if (day) {
-            // Check if the user has already voted
-            const existingVoteIndex = day.votes.findIndex((vote: { userId: string }) => vote.userId === userId);
-
-            if (existingVoteIndex > -1) {
-                // Update the existing vote
-                day.votes[existingVoteIndex].state = state;
+            if (state === "none") {
+                // If state is "none", we remove the user's vote
+                day.votes = day.votes.filter((vote: { userId: string }) => vote.userId !== userId);
             } else {
-                // Add a new vote
-                day.votes.push({ userId, username, avatar, state });
+                // Check if the user has already voted
+                const existingVoteIndex = day.votes.findIndex((vote: { userId: string }) => vote.userId === userId);
+
+                if (existingVoteIndex > -1) {
+                    // Update the existing vote
+                    day.votes[existingVoteIndex].state = state;
+                } else {
+                    // Add a new vote
+                    day.votes.push({ userId, username, avatar, state });
+                }
             }
 
             await day.save();
@@ -77,5 +82,30 @@ export async function POST(req: Request) {
     } catch (error) {
         console.error("Error updating vote:", error);
         return NextResponse.json({ error: "Failed to save vote" }, { status: 500 });
+    }
+}
+
+// DELETE: Remove a user's vote
+export async function DELETE(req: Request) {
+    try {
+        const { date, userId } = await req.json();
+
+        // Find the day entry based on the provided date
+        const day = await DayModel.findOne({ date });
+
+        if (!day) {
+            return NextResponse.json({ error: "Day not found" }, { status: 404 });
+        }
+
+        // Filter out the user's vote from the votes array
+        day.votes = day.votes.filter((vote: { userId: string }) => vote.userId !== userId);
+
+        // Save the updated day document
+        await day.save();
+
+        return NextResponse.json({ success: true });
+    } catch (error) {
+        console.error("Error deleting vote:", error);
+        return NextResponse.json({ error: "Failed to delete vote" }, { status: 500 });
     }
 }
