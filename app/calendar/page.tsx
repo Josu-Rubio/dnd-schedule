@@ -55,7 +55,7 @@ const CalendarPage = async () => {
 
             </nav>
 
-            <CalendarComponent />
+            <CalendarComponent user={user} />
 
         </div>
 
