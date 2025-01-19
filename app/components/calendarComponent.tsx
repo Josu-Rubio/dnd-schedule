@@ -145,18 +145,56 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ user }) => {
                 tileClassName="cursor-pointer"
             />
 
-            <div className="mt-4 p-4 min-h-40 w-full max-w-2xl bg-gray-100 rounded-md shadow-sm">
+            <div className="mt-4 p-4 min-h-40 w-full max-w-2xl bg-gray-100 rounded-md shadow-sm relative">
                 {hoveredDay ? (
                     <div>
                         <h2 className="text-lg font-semibold mb-2">Votos para el {formatDate(hoveredDay)}</h2>
-                        <p>
-                            <span className="text-green-600 font-bold">Perfecto!:</span>{" "}
-                            {dayVotes[hoveredDay]?.green || 0}
-                        </p>
-                        <p>
-                            <span className="text-yellow-600 font-bold">Quizá:</span>{" "}
-                            {dayVotes[hoveredDay]?.yellow || 0}
-                        </p>
+
+                        {/* Top-right summary */}
+                        <div className="absolute top-4 right-4 text-sm bg-gray-200 rounded-full px-3 py-1 shadow">
+                            <span className="text-green-600 font-bold">Green:</span> {dayVotes[hoveredDay]?.green || 0} |{" "}
+                            <span className="text-yellow-600 font-bold">Yellow:</span> {dayVotes[hoveredDay]?.yellow || 0}
+                        </div>
+
+                        {/* Green Votes */}
+                        <div className="mt-4">
+                            <h3 className="text-green-600 font-bold mb-2">Perfecto!</h3>
+                            {dayVotes[hoveredDay]?.votes
+                                ?.filter((vote) => vote.state === "green")
+                                .map((vote) => (
+                                    <div key={vote.userId} className="flex items-center mb-2">
+                                        <div
+                                            className="w-10 h-10 rounded-full border-4 border-green-500 overflow-hidden"
+                                            style={{
+                                                backgroundImage: `url(${vote.avatar || "/default-avatar.png"})`,
+                                                backgroundSize: "cover",
+                                                backgroundPosition: "center",
+                                            }}
+                                        ></div>
+                                        <span className="ml-2 font-medium">{vote.username}</span>
+                                    </div>
+                                ))}
+                        </div>
+
+                        {/* Yellow Votes */}
+                        <div className="mt-4">
+                            <h3 className="text-yellow-600 font-bold mb-2">Quizá</h3>
+                            {dayVotes[hoveredDay]?.votes
+                                ?.filter((vote) => vote.state === "yellow")
+                                .map((vote) => (
+                                    <div key={vote.userId} className="flex items-center mb-2">
+                                        <div
+                                            className="w-10 h-10 rounded-full border-4 border-yellow-400 overflow-hidden"
+                                            style={{
+                                                backgroundImage: `url(${vote.avatar || "/default-avatar.png"})`,
+                                                backgroundSize: "cover",
+                                                backgroundPosition: "center",
+                                            }}
+                                        ></div>
+                                        <span className="ml-2 font-medium">{vote.username}</span>
+                                    </div>
+                                ))}
+                        </div>
                     </div>
                 ) : (
                     <p className="text-gray-500 italic">Selecciona una fecha para ver los votos.</p>
