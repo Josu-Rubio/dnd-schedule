@@ -65,10 +65,16 @@ export async function GET(req: NextRequest) {
 
   // Step 4: Store user info in an HTTP-only cookie
   const response = NextResponse.redirect(new URL("/", req.url));
+
+
+  // Handle cookies securely based on the environment
+  const isProduction = process.env.NODE_ENV === "production";
+
   response.cookies.set("user", JSON.stringify(userInfo), {
     path: "/",
     httpOnly: true, // Ensures cookie isn't accessible to client-side scripts
-    secure: true, // Ensures cookie is sent over HTTPS
+    secure: isProduction, // Set to `true` for production and `false` for local development
+    sameSite: "strict", // Ensures the cookie is sent only in first-party contexts
   });
 
   return response;
