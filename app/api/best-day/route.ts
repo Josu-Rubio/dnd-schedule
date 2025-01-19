@@ -3,6 +3,7 @@
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { startOfWeek, endOfWeek, addDays, format } from "date-fns";
+import { sendMessageToDiscord } from '../../utils/discordBot'; // Adjust the import path if needed
 
 // MongoDB connection
 if (!mongoose.connection.readyState) {
@@ -51,6 +52,14 @@ export async function GET() {
 
         // Prepare the list of participants
         const participants = bestDay.votes.map((vote: { username: string }) => vote.username);
+
+        // Format the message
+        // const message = `The best day for playing is: ${bestDay.date} and there are these people available:\n${participants.join("\n")}`;
+
+        const message = `Test to see if webhook`
+
+        // Send the message to Discord
+        await sendMessageToDiscord(message);
 
         // Return the best day and the list of participants as a JSON response
         return NextResponse.json({
