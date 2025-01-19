@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 
 import CalendarComponent from '../components/calendarComponent';
 import Link from 'next/link';
+import Loader from '../components/loader';
 
 interface User {
     id: string;
@@ -26,8 +27,7 @@ const CalendarPage = async () => {
                 </nav>
                 <div className="h-screen flex flex-col items-center justify-center">
                     <p>Bienvenido!</p>
-                    <button className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700">
-                        <Link href="/calendar">Mostrar mi Calendario</Link></button>
+                    <Loader />
 
                 </div>
             </div>
