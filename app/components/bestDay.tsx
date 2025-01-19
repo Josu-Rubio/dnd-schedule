@@ -1,14 +1,10 @@
-import React, { useState } from 'react';
+
 
 type BestDayResponse = {
     bestDay: string;
     participants: string[];
 };
 
-type BestDayState = {
-    day: string;
-    participants: string;
-} | null;
 
 const BestDayButton: React.FC = () => {
     const getBestDayForNextWeek = async () => {

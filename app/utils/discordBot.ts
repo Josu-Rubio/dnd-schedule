@@ -1,12 +1,27 @@
 // app/api/utils/discordBot.ts
-export async function sendMessageToDiscord(content: string, embed?: object) {
+
+interface Embed {
+    title?: string;
+    description?: string;
+    color?: number;
+    fields?: { name: string; value: string; inline?: boolean }[];
+}
+
+interface WebhookPayload {
+    content?: string;
+    embeds?: Embed[];
+    username?: string;
+    avatar_url?: string;
+    tts?: boolean;
+}
+export async function sendMessageToDiscord(content: string, embed?: Embed) {
     const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
 
     if (!webhookUrl) {
         throw new Error("Discord webhook URL is not set in the environment variables.");
     }
 
-    const payload: any = { content };
+    const payload: WebhookPayload = { content };
     if (embed) payload.embeds = [embed];
 
     const response = await fetch(webhookUrl, {
