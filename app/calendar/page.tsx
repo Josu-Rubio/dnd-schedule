@@ -18,9 +18,18 @@ const CalendarPage = async () => {
     if (!userCookie) {
         // If no user cookie, return a message or redirect logic
         return (
-            <div>
-                <p>You are not logged in. Please log in to access your calendar.</p>
-                <Link href="/">Go to Login</Link>
+            <div className="h-screen w-screen flex flex-col">
+                <nav className="bg-gray-800 text-white p-4 flex justify-between items-center">
+
+                    <h1 className="text-xl font-bold">D&D Scheduler</h1>
+
+                </nav>
+                <div className="h-screen flex flex-col items-center justify-center">
+                    <p>Bienvenido!</p>
+                    <button className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700">
+                        <Link href="/calendar">Mostrar mi Calendario</Link></button>
+
+                </div>
             </div>
         );
     }
