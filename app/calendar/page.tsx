@@ -2,6 +2,7 @@
 import { cookies } from "next/headers";
 
 import CalendarComponent from '../components/calendarComponent';
+import Link from 'next/link';
 
 interface User {
     id: string;
@@ -19,7 +20,7 @@ const CalendarPage = async () => {
         return (
             <div>
                 <p>You are not logged in. Please log in to access your calendar.</p>
-                <a href="/">Go to Login</a>
+                <Link href="/">Go to Login</Link>
             </div>
         );
     }
