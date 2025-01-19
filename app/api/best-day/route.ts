@@ -1,11 +1,9 @@
 // app/api/best-day/route.ts
-
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { startOfWeek, endOfWeek, addDays, format } from "date-fns";
-import { sendMessageToDiscord } from '../../utils/discordBot'; // Adjust the import path if needed
+import { sendMessageToDiscord } from "../utils/discordBot";
 
-// MongoDB connection
 if (!mongoose.connection.readyState) {
     await mongoose.connect(process.env.MONGO_URI || "");
 }
@@ -26,12 +24,10 @@ const DayModel = mongoose.models.Day || mongoose.model("Day", DaySchema);
 
 export async function GET() {
     try {
-        // Calculate the start and end of next week (Monday-Sunday)
         const today = new Date();
         const nextMonday = startOfWeek(addDays(today, 7), { weekStartsOn: 1 });
         const nextSunday = endOfWeek(addDays(today, 7), { weekStartsOn: 1 });
 
-        // Format dates to "YYYY-MM-DD" for comparison
         const startOfNextWeek = format(nextMonday, "yyyy-MM-dd");
         const endOfNextWeek = format(nextSunday, "yyyy-MM-dd");
 
@@ -44,24 +40,19 @@ export async function GET() {
             const yellowVotes = day.votes.filter((vote: { state: string }) => vote.state === "yellow").length;
             const score = greenVotes * 1 + yellowVotes * 0.5;
 
-            return { date: day.date, score, votes: day.votes }; // Include votes here
+            return { date: day.date, score, votes: day.votes };
         });
 
-        // Find the day with the highest score
         const bestDay = scores.reduce((prev, current) => (prev.score > current.score ? prev : current));
 
-        // Prepare the list of participants
         const participants = bestDay.votes.map((vote: { username: string }) => vote.username);
 
-        // Format the message
-        // const message = `The best day for playing is: ${bestDay.date} and there are these people available:\n${participants.join("\n")}`;
+        // const message = `The best day for playing is: ${bestDay.date} and these people are available:\n${participants.join("\n")}`;
 
-        const message = `Test to see if webhook`
+        const message = `Testing message to discord?`
 
-        // Send the message to Discord
         await sendMessageToDiscord(message);
 
-        // Return the best day and the list of participants as a JSON response
         return NextResponse.json({
             bestDay: bestDay.date,
             participants,
