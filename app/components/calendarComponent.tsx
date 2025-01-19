@@ -58,7 +58,7 @@ const CalendarComponent = () => {
 
     return (
 
-        <main className="flex-grow flex flex-col justify-center items-center">
+        <main className="flex-grow flex flex-col justify-center items-center bg-cover" style={{ backgroundImage: 'url(/papiro.png)' }}>
             <Calendar
                 onClickDay={toggleDayState}
                 tileContent={({ date }) => {
@@ -79,7 +79,7 @@ const CalendarComponent = () => {
             />
 
             {/* Votes Section */}
-            <div className="mt-4 p-4 w-full max-w-2xl bg-gray-100 rounded-md shadow-sm">
+            <div className="mt-4 p-4 min-h-40 w-full max-w-2xl bg-gray-100 rounded-md shadow-sm" >
                 {hoveredDay ? (
                     <div>
                         <h2 className="text-lg font-semibold mb-2">
