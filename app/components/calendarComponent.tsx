@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import BestDayButton from './bestDay';
 
 type DayState = "none" | "green" | "yellow";
 
@@ -162,6 +163,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ user }) => {
         });
     };
 
+
     return (
         <main
             className="flex-grow flex flex-col justify-center items-center bg-cover"
@@ -188,6 +190,8 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ user }) => {
                 }}
                 tileClassName="cursor-pointer"
             />
+
+            <BestDayButton />
 
             <div className="mt-4 p-4 min-h-40 w-full max-w-2xl bg-gray-100 rounded-md shadow-sm relative">
                 {hoveredDay ? (
