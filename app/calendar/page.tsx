@@ -2,8 +2,8 @@
 import { cookies } from "next/headers";
 
 import CalendarComponent from '../components/calendarComponent';
-import Link from 'next/link';
 import Loader from '../components/loader';
+import Image from 'next/image';
 
 interface User {
     id: string;
@@ -45,7 +45,7 @@ const CalendarPage = async () => {
 
                 <div className="flex items-center space-x-2">
                     {user.avatar && (
-                        <img src={user.avatar} alt="Avatar" className="w-8 h-8 rounded-full" />
+                        <Image src={user.avatar} alt="Avatar" className="w-8 h-8 rounded-full" />
                     )}
                     <span>{user.username}</span>
                 </div>
