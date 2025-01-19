@@ -72,45 +72,66 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ user }) => {
     const toggleDayState = async (date: Date) => {
         const dayKey = date.toLocaleDateString("en-CA");
 
-        setSelectedDays((prevSelectedDays) => {
-            const currentState = prevSelectedDays[dayKey] || "none";
+        setSelectedDays((prev) => {
+            const currentState = prev[dayKey] || "none";
             const nextState =
                 currentState === "none" ? "green" : currentState === "green" ? "yellow" : "none";
 
-            // Optimistically update dayVotes
-            setDayVotes((prevDayVotes) => {
-                const currentVotes = prevDayVotes[dayKey] || { green: 0, yellow: 0 };
-                const updatedVotes = { ...currentVotes };
+            // Optimistically update the local state
+            setDayVotes((prevVotes) => {
+                const updatedVotes = { ...prevVotes };
+                const votesForDay = updatedVotes[dayKey] || { green: 0, yellow: 0, votes: [] };
 
-                // Adjust vote counts based on the next state
-                if (currentState === "none" && nextState === "green") {
-                    updatedVotes.green += 1;
-                } else if (currentState === "green" && nextState === "yellow") {
-                    updatedVotes.green -= 1;
-                    updatedVotes.yellow += 1;
-                } else if (currentState === "yellow" && nextState === "none") {
-                    updatedVotes.yellow -= 1;
+                // Update counts locally based on the next state
+                if (nextState === "green") {
+                    votesForDay.green += 1;
+                    votesForDay.yellow -= votesForDay.yellow > 0 ? 1 : 0; // Adjust yellow count
+                } else if (nextState === "yellow") {
+                    votesForDay.green -= votesForDay.green > 0 ? 1 : 0; // Adjust green count
+                    votesForDay.yellow += 1;
+                } else {
+                    votesForDay.green -= votesForDay.green > 0 ? 1 : 0;
+                    votesForDay.yellow -= votesForDay.yellow > 0 ? 1 : 0;
                 }
 
-                return { ...prevDayVotes, [dayKey]: updatedVotes };
+                // Update the user in the votes array
+                const userIndex = votesForDay.votes.findIndex((v) => v.userId === user.id);
+                if (userIndex >= 0) {
+                    // Update existing user vote
+                    votesForDay.votes[userIndex].state = nextState;
+                } else if (nextState !== "none") {
+                    // Add new user vote
+                    votesForDay.votes.push({
+                        userId: user.id,
+                        username: user.username,
+                        avatar: user.avatar,
+                        state: nextState,
+                    });
+                }
+
+                updatedVotes[dayKey] = votesForDay;
+                return updatedVotes;
             });
 
-            // Send the update to the backend
-            fetch("/api/calendar", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    date: dayKey,
-                    state: nextState,
-                    userId: user.id,
-                    username: user.username,
-                    avatar: user.avatar,
-                }),
-            }).catch((err) => console.error("Failed to update vote:", err));
+            // Call the backend to persist the changes
+            if (nextState !== "none") {
+                fetch("/api/calendar", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        date: dayKey,
+                        state: nextState,
+                        userId: user.id,
+                        username: user.username,
+                        avatar: user.avatar,
+                    }),
+                }).catch((err) => console.error("Failed to update vote:", err));
+            }
 
-            return { ...prevSelectedDays, [dayKey]: nextState };
+            return { ...prev, [dayKey]: nextState };
         });
 
+        // Update the hoveredDay information
         setHoveredDay(dayKey);
     };
 
