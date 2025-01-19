@@ -36,7 +36,6 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ user }) => {
     const [dayVotes, setDayVotes] = useState<Record<string, DayVotes>>({});
     const [hoveredDay, setHoveredDay] = useState<string | null>(null);
 
-    console.log("user", user)
 
     useEffect(() => {
         // Fetch existing day data
