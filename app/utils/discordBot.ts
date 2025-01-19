@@ -1,6 +1,6 @@
 // app/api/utils/discordBot.ts
 export async function sendMessageToDiscord(message: string) {
-    const webhookUrl = "https://discord.com/api/webhooks/1330632007486668893/56oy97rnRmxxg2feLkM-DAS9TUb_ENGxyOe6jKB3_Eld9sVmaMEer_VjZNveHRNcTce_";
+    const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
 
     if (!webhookUrl) {
         throw new Error("Discord webhook URL is not set in the environment variables.");

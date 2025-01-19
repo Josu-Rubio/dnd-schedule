@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { startOfWeek, endOfWeek, addDays, format } from "date-fns";
-import { sendMessageToDiscord } from "../utils/discordBot";
+import { sendMessageToDiscord } from "../../utils/discordBot";
 
 if (!mongoose.connection.readyState) {
     await mongoose.connect(process.env.MONGO_URI || "");
