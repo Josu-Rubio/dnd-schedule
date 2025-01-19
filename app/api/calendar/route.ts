@@ -22,7 +22,7 @@ const DaySchema = new mongoose.Schema({
 const DayModel = mongoose.models.Day || mongoose.model("Day", DaySchema);
 
 // GET: Retrieve all days
-export async function GET(req: Request) {
+export async function GET() {
     try {
         const days = await DayModel.find();
 
