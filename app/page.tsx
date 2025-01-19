@@ -1,7 +1,6 @@
 "use client";
 
 import Link from 'next/link';
-import CalendarComponent from './components/calendarComponent';
 
 export default function Home() {
 
