@@ -11,8 +11,6 @@ type BestDayState = {
 } | null;
 
 const BestDayButton: React.FC = () => {
-    const [bestDay, setBestDay] = useState<BestDayState>(null);
-
     const getBestDayForNextWeek = async () => {
         try {
             const response = await fetch("/api/best-day");
@@ -25,13 +23,7 @@ const BestDayButton: React.FC = () => {
 
             if (data.bestDay && data.participants) {
                 // Format the participants list into a string
-                const participantsList = data.participants.map((username) => `- ${username}`).join('\n');
-
-                // Set the best day and participants
-                setBestDay({
-                    day: data.bestDay,
-                    participants: participantsList,
-                });
+                console.log("Message sent correctly")
             } else {
                 console.error("Error fetching the best day.");
             }
@@ -41,17 +33,10 @@ const BestDayButton: React.FC = () => {
     };
 
     return (
-        <div>
-            {!bestDay ? (
-                <button onClick={getBestDayForNextWeek}>Find the Best Day to Play Next Week</button>
-            ) : (
-                <p>
-                    The best day for playing is: {bestDay.day}
-                    <br />
-                    And there are these people available:
-                    <pre>{bestDay.participants}</pre>
-                </p>
-            )}
+        <div className='m-5'>
+
+            <button className="text-white bg-violet-900 px-4 py-2 rounded hover:bg-violet-950" onClick={getBestDayForNextWeek}>Mensaje!</button>
+
         </div>
     );
 };
