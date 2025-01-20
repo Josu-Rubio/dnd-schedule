@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   const cookies = req.headers.get("cookie") || "";
-  console.log("cookies", cookies)
   const userCookie = cookies
     .split("; ")
     .find((cookie) => cookie.startsWith("user="));
