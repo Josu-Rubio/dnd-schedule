@@ -1,13 +1,12 @@
 // app/api/monday-message/route.ts
 import { NextResponse } from 'next/server';
-import { startOfWeek, endOfWeek, addDays, format } from 'date-fns';
+import { startOfWeek, addDays, format } from 'date-fns';
 import { sendMessageToDiscord } from '../../utils/discordBot';
 
 export async function GET() {
     try {
         const today = new Date();
         const nextMonday = startOfWeek(addDays(today, 7), { weekStartsOn: 1 });
-        const nextSunday = endOfWeek(addDays(today, 7), { weekStartsOn: 1 });
 
         const dates = [];
         for (let day = 0; day <= 6; day++) {
