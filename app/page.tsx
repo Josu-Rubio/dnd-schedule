@@ -1,18 +1,10 @@
 "use client";
 // app/page.tsx
-import React, { useEffect } from "react";
-
-// Import the cron job logic
-import { initializeCronJobs } from './utils/cron';
 
 import Link from 'next/link';
 
 export default function Home() {
 
-  useEffect(() => {
-    // Trigger cron jobs when the page loads
-    initializeCronJobs();
-  }, []);
 
   return (
     <div className="h-screen w-screen flex flex-col">

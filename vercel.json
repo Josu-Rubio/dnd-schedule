@@ -1,0 +1,20 @@
+{
+    "cron": [
+      {
+        "path": "/api/cron-task",  
+        "schedule": "* * * * *",   
+        "timezone": "UTC"
+      },
+      {
+        "path": "/api/cron-task",  
+        "schedule": "0 9 * * 1",   
+        "timezone": "UTC"
+      },
+      {
+        "path": "/api/cron-task",  
+        "schedule": "0 9 * * 5",   
+        "timezone": "UTC"
+      }
+    ]
+  }
+  
