@@ -47,7 +47,7 @@ export async function GET() {
     const eligibleDay = scores.find((score) => score.totalVotes >= 4);
     if (eligibleDay) {
         // Send message with embed
-        const participants = eligibleDay.votes.map((vote: { userId: any; username: string }) => `<@${vote.userId}>`);
+        const participants = eligibleDay.votes.map((vote: { userId: string; username: string }) => `<@${vote.userId}>`);
         const embed = {
             title: 'People ready to play!',
             description: `The best day to play is: ${eligibleDay.date}`,
