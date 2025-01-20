@@ -14,8 +14,6 @@ const DiscordAuthCallbackPage = () => {
                 const response = await fetch(`/api/auth/discord/callback?code=${code}`);
                 const userData = await response.json();
 
-                console.log("userData", userData)
-
                 if (userData && !userData.error) {
                     // Save user data to localStorage
                     localStorage.setItem("user", JSON.stringify(userData));

@@ -37,7 +37,6 @@ const CalendarPage = async () => {
 
     // Parse the user data from the cookie
     const user: User = JSON.parse(userCookie);
-    console.log("avatar", user.avatar)
 
     return (
         <div className="h-screen w-screen flex flex-col">
