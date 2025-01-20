@@ -1,8 +1,16 @@
 {
   "crons": [
     {
-      "path": "/api/cron",
-      "schedule": "0 19 20 1 *"
+      "path": "/api/friday",
+      "schedule": "0 14 * * 5"
+    },
+    {
+      "path": "/api/monday",
+      "schedule": "0 8 * * 1"
+    },
+    {
+      "path": "/api/ready",
+      "schedule": "5 19 * * *"
     }
   ]
 }
