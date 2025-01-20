@@ -32,9 +32,27 @@ export async function GET() {
         const startOfNextWeek = format(nextMonday, 'yyyy-MM-dd');
         const endOfNextWeek = format(nextSunday, 'yyyy-MM-dd');
 
-        console.log(`Checking for votes between ${startOfNextWeek} and ${endOfNextWeek}`);
+        // Format the first and last day of the week in the format dd/MM/yyyy
+        const startDate = format(nextMonday, 'dd/MM/yyyy');
+        const endDate = format(nextSunday, 'dd/MM/yyyy');
 
-        // Fetch days from the database
+        // Send the "Let's rol this week!" message
+        const embedMonday = {
+            title: "Let's rol this week! 🎲",
+            description: `Votad para ver qué días se pueden jugar la semana que viene.\n\n**Fechas disponibles:**\n${startDate} - ${endDate}\n\nGracias por participar en la planificación de nuestras partidas. ¡Esperamos veros allí!`,
+            url: 'https://dnd-schedule.vercel.app/',
+            color: 0x00ff00, // Green color
+            footer: {
+                text: 'Organizado por Roleros',
+            },
+            timestamp: new Date().toISOString(),
+        };
+
+        const roleId = process.env.ROLE_ID; // Use env variable for RoleID
+        await sendMessageToDiscord(`<@&${roleId}>`, embedMonday);
+
+        // Fetch days from the database to check for eligible days
+        console.log(`Checking for votes between ${startOfNextWeek} and ${endOfNextWeek}`);
         const days = await DayModel.find({
             date: { $gte: startOfNextWeek, $lte: endOfNextWeek },
         });
@@ -54,7 +72,7 @@ export async function GET() {
 
             const participants = eligibleDay.votes.map((vote: { userId: string; username: string }) => `<@${vote.userId}>`);
 
-            const embed = {
+            const embedReady = {
                 title: "Tenemos sesión! 🎉",
                 description: `El ${eligibleDay.date} hay personas interesadas en jugar`,
                 fields: [
@@ -70,8 +88,7 @@ export async function GET() {
                 timestamp: new Date().toISOString(),
             };
 
-            const roleId = process.env.ROLE_ID
-            await sendMessageToDiscord(`<@&${roleId}>`, embed);
+            await sendMessageToDiscord(`<@&${roleId}>`, embedReady);
         } else {
             console.log('No eligible days found for next week.');
         }
