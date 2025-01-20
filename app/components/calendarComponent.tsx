@@ -167,7 +167,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ user }) => {
     return (
         <main
             className="flex-grow flex flex-col justify-center items-center bg-cover"
-            style={{ backgroundImage: "url(/papiro.png)" }}
+            style={{ backgroundImage: "url(/Papiro.jpg)" }}
         >
             <Calendar
                 onClickDay={toggleDayState}
