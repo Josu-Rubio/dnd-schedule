@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 const discordGuildsUrl = "https://discord.com/api/users/@me/guilds";
 
+interface Guild {
+    id: string;
+    name: string;
+    icon?: string | null; // Icon is optional and can be null if not provided
+}
+
 export async function GET(req: NextRequest) {
     // Get the access token from cookies
     const accessToken = req.cookies.get("discord_token");
@@ -35,7 +41,7 @@ export async function GET(req: NextRequest) {
     });
 
     // Map the guild data to include only the necessary fields
-    const guilds = filteredGuilds.map((guild: any) => ({
+    const guilds = filteredGuilds.map((guild: Guild) => ({
         id: guild.id,
         name: guild.name,
         icon: guild.icon

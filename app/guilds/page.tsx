@@ -31,7 +31,6 @@ export default function SelectGuild() {
     const handleSelectGuild = (id: string, name: string) => {
         // Ensure guild.id and guild.name are strings and properly encoded for URL
         const guildId = encodeURIComponent(id.toString()); // Ensure it's a string and URL-safe
-        const guildName = encodeURIComponent(name); // URL-safe string encoding
 
         // Now navigate to the calendar page with the query parameters
         window.location.href = `/calendar?guildId=${guildId}`;
