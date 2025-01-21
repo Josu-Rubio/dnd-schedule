@@ -54,6 +54,8 @@ export async function GET(req: NextRequest) {
 
   const userData = await userResponse.json();
 
+  console.log("userData", userData)
+
   const userInfo = {
     id: userData.id,
     username: userData.username,
