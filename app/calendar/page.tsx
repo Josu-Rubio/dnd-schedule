@@ -17,9 +17,9 @@ interface PageProps {
 }
 
 const CalendarPage = async ({ searchParams }: PageProps) => {
-    // Extract query parameters
-    const { guildId } = await searchParams;
-    let guildInfo = {}
+    // Extract query parameters directly without awaiting
+    const { guildId } = searchParams; // No need for await here
+    let guildInfo = {};
 
     if (!guildId) {
         return (
@@ -57,7 +57,7 @@ const CalendarPage = async ({ searchParams }: PageProps) => {
         // Extract the desired fields
         const { id, name, icon } = targetGuild;
 
-        guildInfo = { id, name, icon }
+        guildInfo = { id, name, icon };
 
         // You can now use `id`, `name`, and `icon` as needed
     } catch (error) {
