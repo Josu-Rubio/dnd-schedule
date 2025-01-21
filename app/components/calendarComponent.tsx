@@ -36,15 +36,14 @@ interface CalendarComponentProps {
     guild: {
         id?: string;
         name?: string;
-        icon?: string
-    }
+        icon?: string;
+    };
 }
 
 const CalendarComponent: React.FC<CalendarComponentProps> = ({
     user,
-    guild
+    guild,
 }) => {
-    const [selectedDays, setSelectedDays] = useState<Record<string, DayState>>({});
     const [dayVotes, setDayVotes] = useState<Record<string, DayVotes>>({});
     const [hoveredDay, setHoveredDay] = useState<string | null>(null);
 
@@ -73,98 +72,94 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
                 });
 
                 setDayVotes(votes);
-                setSelectedDays(userSelections);
             } catch (error) {
                 console.error('Failed to fetch calendar votes:', error);
             }
         };
 
-        // Polling interval (every 5 seconds)
-        const interval = setInterval(fetchVotes, 5000);
-
         // Initial fetch
         fetchVotes();
-
-        // Clean up interval on component unmount
-        return () => clearInterval(interval);
     }, [user.id, guild.id]);
 
-    const toggleDayState = async (date: Date) => {
+    const toggleDay = async (date: Date) => {
         const dayKey = date.toLocaleDateString('en-CA');
+        setHoveredDay(dayKey);
+    };
 
-        setSelectedDays((prev) => {
-            const currentState = prev[dayKey] || 'none';
-            const nextState =
-                currentState === 'none'
-                    ? 'green'
-                    : currentState === 'green'
-                        ? 'yellow'
-                        : 'none';
+    const handleVote = async (state) => {
+        const dayKey = hoveredDay;
 
-            setDayVotes((prevVotes) => {
-                const updatedVotes = { ...prevVotes };
-                const votesForDay = updatedVotes[dayKey] || {
-                    green: 0,
-                    yellow: 0,
-                    votes: [],
-                };
+        // Optimistically update the UI
+        const rollbackVotes = JSON.parse(JSON.stringify(dayVotes)); // Deep copy for rollback
 
-                if (nextState === 'green') {
-                    votesForDay.green += 1;
-                    votesForDay.yellow -= votesForDay.yellow > 0 ? 1 : 0;
-                } else if (nextState === 'yellow') {
-                    votesForDay.green -= votesForDay.green > 0 ? 1 : 0;
-                    votesForDay.yellow += 1;
-                } else {
-                    votesForDay.green -= votesForDay.green > 0 ? 1 : 0;
-                    votesForDay.yellow -= votesForDay.yellow > 0 ? 1 : 0;
-                }
+        setDayVotes((prevVotes) => {
+            const updatedVotes = { ...prevVotes };
+            const votesForDay = updatedVotes[dayKey] || {
+                green: 0,
+                yellow: 0,
+                votes: [],
+            };
 
-                const userIndex = votesForDay.votes.findIndex((v) => v.userId === user.id);
-                if (userIndex >= 0) {
-                    votesForDay.votes[userIndex].state = nextState;
-                } else if (nextState !== 'none') {
-                    votesForDay.votes.push({
-                        userId: user.id,
-                        username: user.username,
-                        avatar: user.avatar,
-                        state: nextState,
-                    });
-                }
+            // Adjust vote counts
+            if (state === 'green') {
+                votesForDay.green += 1;
+                votesForDay.yellow -= votesForDay.yellow > 0 ? 1 : 0;
+            } else if (state === 'yellow') {
+                votesForDay.green -= votesForDay.green > 0 ? 1 : 0;
+                votesForDay.yellow += 1;
+            } else if (state === 'none') {
+                votesForDay.green -= votesForDay.green > 0 ? 1 : 0;
+                votesForDay.yellow -= votesForDay.yellow > 0 ? 1 : 0;
+            }
 
-                updatedVotes[dayKey] = votesForDay;
-                return updatedVotes;
-            });
-
-            // if (nextState !== 'none') {
-            fetch(`/api/calendar?guildId=${encodeURIComponent(guild.id || '')}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    date: dayKey,
-                    state: nextState,
+            // Update or add the user vote in the votes array
+            const userIndex = votesForDay.votes.findIndex(
+                (v) => v.userId === user.id
+            );
+            if (userIndex >= 0) {
+                // Update the user's vote
+                votesForDay.votes[userIndex].state = state;
+            } else {
+                // Add a new vote with the current state
+                votesForDay.votes.push({
                     userId: user.id,
                     username: user.username,
                     avatar: user.avatar,
-                    guildId: guild.id,
-                }),
-            }).catch((err) => console.error('Failed to update vote:', err));
-            // } else {
-            //     fetch(`/api/calendar?guildId=${encodeURIComponent(guild.id || '')}`, {
-            //         method: 'DELETE',
-            //         headers: { 'Content-Type': 'application/json' },
-            //         body: JSON.stringify({
-            //             date: dayKey,
-            //             userId: user.id,
-            //             guildId: guild.id,
-            //         }),
-            //     }).catch((err) => console.error('Failed to delete vote:', err));
-            // }
+                    state,
+                });
+            }
 
-            return { ...prev, [dayKey]: nextState };
+            updatedVotes[dayKey] = votesForDay;
+            return updatedVotes;
         });
 
-        setHoveredDay(dayKey);
+        // Send the updated state to the server
+        try {
+            const response = await fetch(
+                `/api/calendar?guildId=${encodeURIComponent(guild.id || '')}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        date: dayKey,
+                        state,
+                        userId: user.id,
+                        username: user.username,
+                        avatar: user.avatar,
+                        guildId: guild.id,
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error('Failed to update vote');
+            }
+        } catch (err) {
+            console.error('Error updating vote:', err);
+
+            // Rollback optimistic update on error
+            setDayVotes(rollbackVotes);
+        }
     };
 
     const formatDate = (dateString: string) => {
@@ -179,31 +174,43 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
 
     return (
         <main
-            className="flex-grow flex flex-col justify-center items-center bg-center bg-cover"
+            className='flex-grow flex flex-col justify-center items-center bg-center bg-cover '
             style={{ backgroundImage: 'url(/background.jpg)' }}
         >
-            <div className="flex flex-row justify-center items-start w-full max-w-6xl gap-4 px-4 lg:px-8">
-                <div className="flex-shrink-0 justify-center w-full lg:w-1/2 p-4">
+            <div className='flex flex-row justify-center items-start w-full max-w-6xl gap-4 px-4 lg:px-8'>
+                {/* Calendar Section */}
+                <div className='flex-shrink-0 justify-center w-full lg:w-1/2 p-4 overflow-auto'>
                     <Calendar
-                        onClickDay={toggleDayState}
+                        onClickDay={toggleDay}
                         tileContent={({ date }) => {
                             const dayKey = date.toLocaleDateString('en-CA');
-                            const state = selectedDays[dayKey];
-                            const votes = dayVotes[dayKey] || { green: 0, yellow: 0 };
+                            const votes = dayVotes[dayKey] || {
+                                green: 0,
+                                yellow: 0,
+                                votes: [],
+                            };
+
+                            // Get the current user's vote for this day
+                            const currentUserVote = votes.votes.find(
+                                (vote) => vote.userId === user.id
+                            );
+                            const userState = currentUserVote?.state || 'none';
 
                             return (
                                 <div
-                                    className={`w-6 h-6 ${state === 'green'
+                                    className={`w-6 h-6 ${userState === 'green'
                                         ? 'bg-green-500'
-                                        : state === 'yellow'
+                                        : userState === 'yellow'
                                             ? 'bg-yellow-400'
-                                            : ''
+                                            : userState === 'none'
+                                                ? ''
+                                                : ''
                                         } rounded-full mx-auto`}
                                     title={`Green: ${votes.green}, Yellow: ${votes.yellow}`}
                                 />
                             );
                         }}
-                        tileClassName="cursor-pointer"
+                        tileClassName='cursor-pointer'
                         tileDisabled={({ date }) => {
                             const today = new Date();
                             today.setHours(0, 0, 0, 0);
@@ -211,20 +218,84 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
                         }}
                     />
                 </div>
-                <div className="w-full lg:w-1/2 p-4 bg-white/70 rounded-md shadow-md overflow-auto">
-                    <h1 className="text-center text-xl font-bold">
-                        <div className="flex items-center justify-center space-x-2"><Image src={guild ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png` : "/default-avatar.png"} width={32}
-                            height={32}
-                            alt={`${user.username} avatar`}
-                            className="w-8 h-8 rounded-full" />
-                            <span>{guild.name ? `${decodeURIComponent(guild.name)}` : 'No Guild'}</span>
+
+                {/* Right Section (Votes or Message) */}
+                <div className='w-full lg:w-1/2 p-4 bg-white/70 rounded-md shadow-md overflow-auto'>
+                    <h1 className='text-center text-xl font-bold mb-2'>
+                        <div className='flex items-center justify-center space-x-2'>
+                            <Image
+                                src={
+                                    guild
+                                        ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`
+                                        : '/default-avatar.png'
+                                }
+                                width={32}
+                                height={32}
+                                alt={`${user.username} avatar`}
+                                className='w-8 h-8 rounded-full'
+                            />
+                            <span>
+                                {guild.name ? `${decodeURIComponent(guild.name)}` : 'No Guild'}
+                            </span>
                         </div>
                     </h1>
+                    <div className='mx-auto w-[100%] h-[2px] bg-black mb-2'></div>
                     {hoveredDay ? (
                         <div>
-                            <h2 className="text-lg font-semibold mb-2">
-                                Votes for {formatDate(hoveredDay)}
+                            <h2 className='text-lg font-semibold mb-2'>
+                                Votos para el {formatDate(hoveredDay)}
                             </h2>
+                            <div className='flex justify-around'>
+                                {/* Voting Buttons */}
+                                <button
+                                    className={`text-black bg-green-500 px-6 py-3 rounded hover:bg-green-700 transition duration-200
+                            ${dayVotes[hoveredDay]?.votes?.some(
+                                        (vote) => vote.userId === user.id && vote.state === 'green'
+                                    )
+                                            ? 'opacity-50 cursor-not-allowed'
+                                            : 'shadow-lg'
+                                        }`}
+                                    disabled={dayVotes[hoveredDay]?.votes?.some(
+                                        (vote) => vote.userId === user.id && vote.state === 'green'
+                                    )}
+                                    onClick={() => handleVote('green')}
+                                >
+                                    Me apunto!
+                                </button>
+                                <button
+                                    className={`text-black bg-yellow-400 px-6 py-3 rounded hover:bg-yellow-600 transition duration-200
+                            ${dayVotes[hoveredDay]?.votes?.some(
+                                        (vote) => vote.userId === user.id && vote.state === 'yellow'
+                                    )
+                                            ? 'opacity-50 cursor-not-allowed'
+                                            : 'shadow-lg'
+                                        }`}
+                                    disabled={dayVotes[hoveredDay]?.votes?.some(
+                                        (vote) => vote.userId === user.id && vote.state === 'yellow'
+                                    )}
+                                    onClick={() => handleVote('yellow')}
+                                >
+                                    Quizá
+                                </button>
+                                <button
+                                    className={`text-black bg-red-400 px-6 py-3 rounded hover:bg-red-600 transition duration-200
+                            ${dayVotes[hoveredDay]?.votes?.some(
+                                        (vote) => vote.userId === user.id && vote.state === 'none'
+                                    )
+                                            ? 'opacity-50 cursor-not-allowed'
+                                            : 'shadow-lg'
+                                        }`}
+                                    disabled={dayVotes[hoveredDay]?.votes?.some(
+                                        (vote) =>
+                                            vote.userId === user.id &&
+                                            (vote.state === 'none' || !vote.state)
+                                    )}
+                                    onClick={() => handleVote('none')}
+                                >
+                                    No puedo
+                                </button>
+                            </div>
+
                             {/* Green Votes */}
                             <div className='mt-4'>
                                 <h3 className='text-black font-bold mb-2 underline decoration-green-500'>
@@ -237,10 +308,16 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
                                             <div
                                                 className='w-10 h-10 rounded-full border-4 border-green-500 overflow-hidden'
                                                 style={{
-                                                    backgroundImage: `url(${user.avatar ? `https://cdn.discordapp.com/avatars/227888648778022914/${user.avatar}.png` : "/default-avatar.png"})`,
+                                                    backgroundImage: `url(${vote.avatar
+                                                        ? vote.avatar.startsWith('http')
+                                                            ? vote.avatar
+                                                            : `https://cdn.discordapp.com/avatars/${vote.userId}/${vote.avatar}.png`
+                                                        : '/default-avatar.png'
+                                                        })`,
                                                     backgroundSize: 'cover',
                                                     backgroundPosition: 'center',
-                                                }}></div>
+                                                }}
+                                            ></div>
                                             <span className='ml-2 font-medium'>{vote.username}</span>
                                         </div>
                                     ))}
@@ -258,21 +335,50 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
                                             <div
                                                 className='w-10 h-10 rounded-full border-4 border-yellow-400 overflow-hidden'
                                                 style={{
-                                                    backgroundImage: `url(${user.avatar ? `https://cdn.discordapp.com/avatars/227888648778022914/${user.avatar}.png` : "/default-avatar.png"})`,
+                                                    backgroundImage: `url(${vote.avatar
+                                                        ? vote.avatar.startsWith('http')
+                                                            ? vote.avatar
+                                                            : `https://cdn.discordapp.com/avatars/${vote.userId}/${vote.avatar}.png`
+                                                        : '/default-avatar.png'
+                                                        })`,
                                                     backgroundSize: 'cover',
                                                     backgroundPosition: 'center',
-                                                }}></div>
+                                                }}
+                                            ></div>
                                             <span className='ml-2 font-medium'>{vote.username}</span>
                                         </div>
                                     ))}
                             </div>
                         </div>
                     ) : (
-                        <p className="text-gray-500 italic">Select a date to see votes.</p>
+                        <p className='text-gray-700 italic'>Select a date to see votes.</p>
                     )}
                 </div>
             </div>
+
+            {/* CSS for responsiveness and scroll */}
+            <style jsx>{`
+        @media (max-width: 768px) {
+            .md\\:w-1\\/2 {
+                width: 100%;
+            }
+            .md\\:flex-row {
+                flex-direction: column;
+            }
+            main {
+                overflow-y: auto;
+            }
+            .overflow-auto {
+                overflow-y: auto;
+            }
+        }
+
+        .overflow-auto {
+            overflow-y: auto;
+        }
+    `}</style>
         </main>
+
     );
 };
 

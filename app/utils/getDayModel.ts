@@ -11,8 +11,12 @@ async function getDayModel(guildId: string) {
             {
                 userId: { type: String, required: true },
                 username: { type: String, required: true },
-                avatar: { type: String },
-                state: { type: String, enum: ["green", "yellow"], required: true },
+                avatar: { type: String, required: true },
+                state: {
+                    type: String,
+                    enum: ['green', 'yellow', 'none'], // Add 'none' here
+                    required: true
+                },
             },
         ],
     });
