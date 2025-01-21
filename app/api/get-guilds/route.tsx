@@ -6,8 +6,6 @@ export async function GET(req: NextRequest) {
     // Get the access token from cookies
     const accessToken = req.cookies.get("discord_token");
 
-    console.log("Access Token:", accessToken);
-
     if (!accessToken) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -18,8 +16,6 @@ export async function GET(req: NextRequest) {
             Authorization: `Bearer ${accessToken.value}`,
         },
     });
-
-    console.log("guildsres", guildsResponse)
 
     if (!guildsResponse.ok) {
         return NextResponse.json({ error: "Failed to fetch guilds" }, { status: guildsResponse.status });

@@ -56,8 +56,6 @@ export async function GET() {
         };
         const message = 'Here is the group ready to play!';
         await sendMessageToDiscord(message, embed);
-    } else {
-        console.log('eligibleDay', eligibleDay);
     }
 
     return new Response(JSON.stringify({ message: 'Cron job executed successfully' }), {

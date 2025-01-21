@@ -59,14 +59,6 @@ export async function GET(req: NextRequest) {
 
     const guildsData = await guildsResponse.json();
 
-    // Filter guilds if needed (e.g., admin permissions)
-    // const filteredGuilds = guildsData.filter(guild => {
-    //     const adminPermission = 0x8; // ADMINISTRATOR permission bit
-    //     return (guild.permissions & adminPermission) === adminPermission;
-    // });
-
-    // console.log("filteredGuilds", filteredGuilds)
-
     const response = NextResponse.redirect(new URL("/guilds", req.url));
 
     // Save user info, guilds, discord Token

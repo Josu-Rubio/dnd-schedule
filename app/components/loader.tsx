@@ -12,7 +12,7 @@ const Loader = () => {
     useEffect(() => {
         // Redirect after 2 seconds
         const timer = setTimeout(() => {
-            router.push('/calendar');
+            router.push('/guilds');
         }, 2000); // Wait for 2 seconds before redirecting
 
         // Cleanup timeout on unmount
