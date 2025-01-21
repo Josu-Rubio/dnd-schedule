@@ -10,16 +10,18 @@ interface User {
     avatar: string | null;
 }
 
-interface PageProps {
-    searchParams: {
-        guildId?: string;
-    };
-}
 
-const CalendarPage = async ({ searchParams }: PageProps) => {
-    // Extract query parameters directly without awaiting
-    const { guildId } = searchParams; // No need for await here
-    let guildInfo = {};
+
+const CalendarPage = async ({
+    params,
+    searchParams,
+}: {
+    params: { guildId: string }; // `params` should be an object with the correct key for dynamic routing
+    searchParams: { guildId?: string }; // `searchParams` should be typed accordingly
+}) => {
+    // Extract query parameters
+    const { guildId } = await searchParams;
+    let guildInfo = {}
 
     if (!guildId) {
         return (
@@ -57,7 +59,7 @@ const CalendarPage = async ({ searchParams }: PageProps) => {
         // Extract the desired fields
         const { id, name, icon } = targetGuild;
 
-        guildInfo = { id, name, icon };
+        guildInfo = { id, name, icon }
 
         // You can now use `id`, `name`, and `icon` as needed
     } catch (error) {
