@@ -175,8 +175,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({ user }) => {
 
     return (
         <main
-            className='flex-grow flex flex-col justify-center items-center bg-cover'
-            style={{ backgroundImage: 'url(/Papiro.jpg)' }}>
+            className='flex-grow flex flex-col justify-center items-center bg-center bg-cover' style={{ backgroundImage: 'url(/background.jpg)' }}>
             {/* Main container with side-by-side layout */}
             <div className='flex flex-row justify-center items-start w-full max-w-6xl gap-4 px-4 lg:px-8'>
                 {/* Calendar Section */}

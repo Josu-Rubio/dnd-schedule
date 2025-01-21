@@ -20,18 +20,21 @@ const CalendarPage = async () => {
     if (!userCookie) {
         // If no user cookie, return a message or redirect logic
         return (
-            <div className="h-screen w-screen flex flex-col">
+            <div className="h-screen w-screen flex flex-col overflow-hidden">
+                {/* Navigation */}
                 <nav className="bg-gray-800 text-white p-4 flex justify-between items-center">
-
                     <h1 className="text-xl font-bold">D&D Scheduler</h1>
-
                 </nav>
-                <div className="h-screen flex flex-col items-center justify-center">
 
+                {/* Main Content */}
+                <main
+                    className="flex-grow flex items-center justify-center bg-center bg-cover"
+                    style={{ backgroundImage: 'url(/background.jpg)' }}
+                >
                     <Loader />
-
-                </div>
+                </main>
             </div>
+
         );
     }
 
@@ -39,7 +42,7 @@ const CalendarPage = async () => {
     const user: User = JSON.parse(userCookie);
 
     return (
-        <div className="h-screen w-screen flex flex-col">
+        <div className="h-screen w-screen flex flex-col overflow-hidden">
             <nav className="bg-gray-800 text-white p-4 flex justify-between items-center">
 
                 <h1 className="text-xl font-bold">D&D Scheduler</h1>

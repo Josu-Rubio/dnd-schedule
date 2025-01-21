@@ -20,7 +20,7 @@ export default function Home() {
         </Link>
 
       </nav>
-      <main className="flex-grow flex flex-col justify-end items-center bg-center" style={{ backgroundImage: 'url(/background.jpg)' }}>
+      <main className="flex-grow flex flex-col justify-center items-center bg-center bg-cover" style={{ backgroundImage: 'url(/background.jpg)' }}>
         <h2 className="text-white text-3xl mb-8 font-bold" style={{ textShadow: "2px 2px #000000" }}>
           Bienvenido al calendario
         </h2>
