@@ -10,7 +10,13 @@ interface User {
     avatar: string | null;
 }
 
-const CalendarPage = async ({ searchParams }: { searchParams: { guildId?: string } }) => {
+interface PageProps {
+    searchParams: {
+        guildId?: string;
+    };
+}
+
+const CalendarPage = async ({ searchParams }: PageProps) => {
     // Extract query parameters
     const { guildId } = await searchParams;
     let guildInfo = {}
