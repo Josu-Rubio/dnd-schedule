@@ -11,20 +11,23 @@ interface User {
     avatar: string | null;
 }
 
-export default async function Page({
-    params,
-    searchParams,
-}: {
-    params: { guildId: string }; // `params` should be an object with the correct key for dynamic routing
-    searchParams: { guildId?: string }; // `searchParams` should be typed accordingly
-}) {
-    // Destructure `guildId` from `params` or `searchParams`
-    const { guildId } = searchParams;
-    console.log(params)
+// Define the type for the props
+interface PageProps {
+    params: Promise<{ guildId: string }>;
+    searchParams: Promise<{ guildId?: string }>;
+}
+
+export default async function Page({ params, searchParams }: PageProps) {
+    // Await the params and searchParams because they are Promises
+    const { guildId } = await searchParams; // This resolves the searchParams promise
+    const { guildId: paramGuildId } = await params; // This resolves the params promise
+
+    const effectiveGuildId = guildId || paramGuildId; // Use whichever is available
+
     let guildInfo = {};
 
-    // If `guildId` is missing, show an error message
-    if (!guildId) {
+    // If no guildId, show an error message
+    if (!effectiveGuildId) {
         return (
             <div className="h-screen w-screen flex flex-col items-center justify-center">
                 <h1 className="text-2xl font-bold">Error</h1>
@@ -47,7 +50,7 @@ export default async function Page({
         const guilds = JSON.parse(guildCookie);
 
         // Replace this with your target ID
-        const targetGuildId = guildId;
+        const targetGuildId = effectiveGuildId;
 
         // Find the guild by ID
         const targetGuild = guilds.find((guild: { id: string }) => guild.id === targetGuildId);
