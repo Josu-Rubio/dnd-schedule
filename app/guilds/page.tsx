@@ -28,7 +28,7 @@ export default function SelectGuild() {
     }, []);
 
     // Redirect to the calendar page with the selected guild information
-    const handleSelectGuild = (id: string, name: string) => {
+    const handleSelectGuild = (id: string) => {
         // Ensure guild.id and guild.name are strings and properly encoded for URL
         const guildId = encodeURIComponent(id.toString()); // Ensure it's a string and URL-safe
 
@@ -80,7 +80,7 @@ export default function SelectGuild() {
                             <li
                                 key={guild.id}
                                 className="flex items-center justify-center cursor-pointer bg-gray-800 text-white p-4 rounded-lg shadow-lg hover:bg-gray-700 transition-colors m-2"
-                                onClick={() => handleSelectGuild(guild.id, guild.name)}
+                                onClick={() => handleSelectGuild(guild.id)}
                             >
 
                                 <Image
