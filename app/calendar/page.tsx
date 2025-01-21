@@ -5,6 +5,7 @@ import CalendarComponent from '../components/calendarComponent';
 
 import Loader from '../components/loader';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface User {
     id: string;
@@ -31,10 +32,11 @@ const CalendarPage = async () => {
                     className="flex-grow flex items-center justify-center bg-center bg-cover"
                     style={{ backgroundImage: 'url(/background.jpg)' }}
                 >
-                    <Loader />
+                    <div className="h-full w-full flex items-center justify-center">
+                        <Loader />
+                    </div>
                 </main>
             </div>
-
         );
     }
 
@@ -44,8 +46,13 @@ const CalendarPage = async () => {
     return (
         <div className="h-screen w-screen flex flex-col overflow-hidden">
             <nav className="bg-gray-800 text-white p-4 flex justify-between items-center">
+                <Link
+                    className="text-white"
+                    href="/"
+                >
+                    <h1 className="text-xl font-bold">D&D Scheduler</h1>
+                </Link>
 
-                <h1 className="text-xl font-bold">D&D Scheduler</h1>
 
                 <div className="flex items-center space-x-2">
                     {user.avatar && (
