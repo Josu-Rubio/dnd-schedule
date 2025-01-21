@@ -3,6 +3,7 @@ import CalendarComponent from "../components/calendarComponent";
 import Image from "next/image";
 import Link from "next/link";
 
+// Type definition for user
 interface User {
     id: string;
     username: string;
@@ -10,19 +11,19 @@ interface User {
     avatar: string | null;
 }
 
-
-
-const CalendarPage = async ({
+export default async function Page({
     params,
     searchParams,
 }: {
     params: { guildId: string }; // `params` should be an object with the correct key for dynamic routing
     searchParams: { guildId?: string }; // `searchParams` should be typed accordingly
-}) => {
-    // Extract query parameters
-    const { guildId } = await searchParams;
-    let guildInfo = {}
+}) {
+    // Destructure `guildId` from `params` or `searchParams`
+    const { guildId } = searchParams;
+    console.log(params)
+    let guildInfo = {};
 
+    // If `guildId` is missing, show an error message
     if (!guildId) {
         return (
             <div className="h-screen w-screen flex flex-col items-center justify-center">
@@ -59,7 +60,7 @@ const CalendarPage = async ({
         // Extract the desired fields
         const { id, name, icon } = targetGuild;
 
-        guildInfo = { id, name, icon }
+        guildInfo = { id, name, icon };
 
         // You can now use `id`, `name`, and `icon` as needed
     } catch (error) {
@@ -105,6 +106,4 @@ const CalendarPage = async ({
             </main>
         </div>
     );
-};
-
-export default CalendarPage;
+}
