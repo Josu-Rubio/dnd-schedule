@@ -13,7 +13,7 @@ const Loader = () => {
         // Redirect after 2 seconds
         const timer = setTimeout(() => {
             router.push('/guilds');
-        }, 2000); // Wait for 2 seconds before redirecting
+        }, 5000); // Wait for 5 seconds before redirecting
 
         // Cleanup timeout on unmount
         return () => clearTimeout(timer);
