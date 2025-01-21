@@ -164,12 +164,8 @@ export async function POST(req: Request) {
         if (day) {
 
             if (state === "none") {
-                console.log("stat", state)
-                console.log("day before", day)
                 // Directly remove the user's vote
                 day.votes = day.votes.filter((vote: { userId: string }) => vote.userId !== userId);
-                console.log("day after", day)
-
             } else {
                 const existingVoteIndex = day.votes.findIndex((vote: { userId: string }) => vote.userId === userId);
 
@@ -181,7 +177,7 @@ export async function POST(req: Request) {
                     day.votes.push({ userId, username, avatar, state });
                 }
             }
-            console.log("day finish", day)
+
             await day.save();  // Save the updated document
         } else {
             await DayModel.create({

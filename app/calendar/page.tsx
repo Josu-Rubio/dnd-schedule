@@ -53,8 +53,6 @@ const CalendarPage = async ({ searchParams }: { searchParams: { guildId?: string
 
         guildInfo = { id, name, icon }
 
-        console.log({ id, name, icon });
-
         // You can now use `id`, `name`, and `icon` as needed
     } catch (error) {
         console.error("Error parsing guild cookie:", error);
@@ -71,8 +69,6 @@ const CalendarPage = async ({ searchParams }: { searchParams: { guildId?: string
 
     // Parse the user data from the cookie
     const user: User = JSON.parse(userCookie);
-
-    console.log("avatar", user.avatar)
 
     return (
         <div className="h-screen w-screen flex flex-col overflow-hidden">

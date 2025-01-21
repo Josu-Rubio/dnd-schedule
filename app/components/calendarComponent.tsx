@@ -177,8 +177,6 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
         });
     };
 
-    console.log("guild", guild)
-
     return (
         <main
             className="flex-grow flex flex-col justify-center items-center bg-center bg-cover"
@@ -227,7 +225,47 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
                             <h2 className="text-lg font-semibold mb-2">
                                 Votes for {formatDate(hoveredDay)}
                             </h2>
-                            {/* Green and Yellow Votes Sections */}
+                            {/* Green Votes */}
+                            <div className='mt-4'>
+                                <h3 className='text-black font-bold mb-2 underline decoration-green-500'>
+                                    Perfecto!
+                                </h3>
+                                {dayVotes[hoveredDay]?.votes
+                                    ?.filter((vote) => vote.state === 'green')
+                                    .map((vote) => (
+                                        <div key={vote.userId} className='flex items-center mb-2'>
+                                            <div
+                                                className='w-10 h-10 rounded-full border-4 border-green-500 overflow-hidden'
+                                                style={{
+                                                    backgroundImage: `url(${user.avatar ? `https://cdn.discordapp.com/avatars/227888648778022914/${user.avatar}.png` : "/default-avatar.png"})`,
+                                                    backgroundSize: 'cover',
+                                                    backgroundPosition: 'center',
+                                                }}></div>
+                                            <span className='ml-2 font-medium'>{vote.username}</span>
+                                        </div>
+                                    ))}
+                            </div>
+
+                            {/* Yellow Votes */}
+                            <div className='mt-4'>
+                                <h3 className='text-black font-bold mb-2 underline decoration-yellow-400'>
+                                    Quizá
+                                </h3>
+                                {dayVotes[hoveredDay]?.votes
+                                    ?.filter((vote) => vote.state === 'yellow')
+                                    .map((vote) => (
+                                        <div key={vote.userId} className='flex items-center mb-2'>
+                                            <div
+                                                className='w-10 h-10 rounded-full border-4 border-yellow-400 overflow-hidden'
+                                                style={{
+                                                    backgroundImage: `url(${user.avatar ? `https://cdn.discordapp.com/avatars/227888648778022914/${user.avatar}.png` : "/default-avatar.png"})`,
+                                                    backgroundSize: 'cover',
+                                                    backgroundPosition: 'center',
+                                                }}></div>
+                                            <span className='ml-2 font-medium'>{vote.username}</span>
+                                        </div>
+                                    ))}
+                            </div>
                         </div>
                     ) : (
                         <p className="text-gray-500 italic">Select a date to see votes.</p>
