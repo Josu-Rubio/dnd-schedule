@@ -2,7 +2,7 @@
 // app/page.tsx
 
 import Link from 'next/link';
-import { SpeedInsights } from "@vercel/speed-insights/next"
+
 
 export default function Home() {
 
@@ -24,7 +24,7 @@ export default function Home() {
         <h2 className="text-white text-3xl mb-8 font-bold" style={{ textShadow: "2px 2px #000000" }}>
           Bienvenido al calendario
         </h2>
-        <SpeedInsights />
+
       </main>
 
     </div>

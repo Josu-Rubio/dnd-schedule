@@ -11,17 +11,9 @@ export async function GET(req: NextRequest) {
   const code = url.searchParams.get("code");
 
   if (!code) {
-    // Step 1: Redirect to Discord authorization endpoint
-    const discordAuthUrl = new URL("https://discord.com/api/oauth2/authorize");
-    discordAuthUrl.searchParams.append("client_id", clientId);
-    discordAuthUrl.searchParams.append("redirect_uri", redirectUri);
-    discordAuthUrl.searchParams.append("response_type", "code");
-    discordAuthUrl.searchParams.append("scope", "identify email guilds");
-
-    return NextResponse.redirect(discordAuthUrl.toString());
+    return NextResponse.redirect(new URL("/", req.url));
   }
 
-  // Step 2: Exchange authorization code for access token
   const body = new URLSearchParams({
     client_id: clientId,
     client_secret: clientSecret,
@@ -43,7 +35,6 @@ export async function GET(req: NextRequest) {
   const tokenData = await tokenResponse.json();
   const { access_token: accessToken } = tokenData;
 
-  // Step 3: Fetch user info using the access token
   const userResponse = await fetch(discordUserUrl, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
@@ -53,30 +44,23 @@ export async function GET(req: NextRequest) {
   }
 
   const userData = await userResponse.json();
-
-  console.log("userData", userData)
-
   const userInfo = {
     id: userData.id,
     username: userData.username,
+    email: userData.email,
     avatar: userData.avatar
       ? `https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}.png`
       : null,
-    email: userData.email,
   };
 
-  // Step 4: Store user info in an HTTP-only cookie
-  const response = NextResponse.redirect(new URL("/", req.url));
+  const response = NextResponse.redirect(new URL("/calendar", req.url));
 
-
-  // Handle cookies securely based on the environment
-  const isProduction = process.env.NODE_ENV === "production";
-
+  // Save user info in an HTTP-only cookie
   response.cookies.set("user", JSON.stringify(userInfo), {
     path: "/",
-    httpOnly: true, // Ensures cookie isn't accessible to client-side scripts
-    secure: isProduction, // Set to `true` for production and `false` for local development
-    sameSite: "strict", // Ensures the cookie is sent only in first-party contexts
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
   });
 
   return response;
