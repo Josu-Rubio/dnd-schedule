@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 
 const Screen = () => {
     const [selectedVideo, setSelectedVideo] = useState(null);
-    const [guilds, setGuilds] = useState([]);
     const router = useRouter(); // Hook for handling navigation
 
     useEffect(() => {
@@ -18,7 +17,7 @@ const Screen = () => {
                 }
 
                 const data = await response.json();
-                setGuilds(data.guilds);
+
 
                 // Check if the guild with ID "1214249928772165632" exists
                 const guildExists = data.guilds.some(guild => guild.id === "1214249928772165632");
