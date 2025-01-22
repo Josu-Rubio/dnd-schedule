@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import './calendarComponent.css'
 
 type DayState = 'none' | 'green' | 'yellow';
 
@@ -174,12 +175,14 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
 
     return (
         <main
-            className='flex-grow flex flex-col justify-center items-center bg-center bg-cover '
-            style={{ backgroundImage: 'url(/background.jpg)' }}
+            className='flex-grow flex flex-col justify-center items-center bg-center bg-cover'
+            style={{
+                backgroundImage: 'url(/background.jpg)',
+            }}
         >
-            <div className='flex flex-row justify-center items-start w-full max-w-6xl gap-4 px-4 lg:px-8'>
+            <div className='container'>
                 {/* Calendar Section */}
-                <div className='flex-shrink-0 justify-center w-full lg:w-1/2 p-4 overflow-auto'>
+                <div className='flex-shrink-0 justify-center items-center w-full lg:w-1/2 p-4 overflow-auto'>
                     <Calendar
                         onClickDay={toggleDay}
                         tileContent={({ date }) => {
@@ -220,7 +223,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
                 </div>
 
                 {/* Right Section (Votes or Message) */}
-                <div className='w-full lg:w-1/2 p-4 bg-white/70 rounded-md shadow-md overflow-auto'>
+                <div className='w-full lg:w-1/2 p-4 bg-white/70 rounded-md shadow-md overflow-auto' style={{ height: 'auto', maxHeight: '600px' }}>
                     <h1 className='text-center text-xl font-bold mb-2'>
                         <div className='flex items-center justify-center space-x-2'>
                             <Image
@@ -306,7 +309,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
                                     .map((vote) => (
                                         <div key={vote.userId} className='flex items-center mb-2'>
                                             <div
-                                                className='w-10 h-10 rounded-full border-4 border-green-500 overflow-hidden'
+                                                className='w-10 h-10 rounded-full border-4 border-green-500 '
                                                 style={{
                                                     backgroundImage: `url(${vote.avatar
                                                         ? vote.avatar.startsWith('http')
@@ -333,7 +336,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
                                     .map((vote) => (
                                         <div key={vote.userId} className='flex items-center mb-2'>
                                             <div
-                                                className='w-10 h-10 rounded-full border-4 border-yellow-400 overflow-hidden'
+                                                className='w-10 h-10 rounded-full border-4 border-yellow-400 '
                                                 style={{
                                                     backgroundImage: `url(${vote.avatar
                                                         ? vote.avatar.startsWith('http')
@@ -351,7 +354,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
                             </div>
                         </div>
                     ) : (
-                        <p className='text-gray-700 italic'>Select a date to see votes.</p>
+                        <p className='text-gray-700 italic'>Selecciona una fecha para ver los votos.</p>
                     )}
                 </div>
             </div>
@@ -377,7 +380,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
             overflow-y: auto;
         }
     `}</style>
-        </main>
+        </main >
 
     );
 };

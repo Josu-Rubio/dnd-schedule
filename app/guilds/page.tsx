@@ -38,7 +38,7 @@ export default function SelectGuild() {
 
     if (guilds.length <= 0) {
         return (
-            <div className="h-screen w-screen flex flex-col overflow-hidden">
+            <div className="h-screen w-screen flex flex-col ">
                 {/* Navigation */}
                 <nav className="bg-gray-800 text-white p-4 flex justify-between items-center">
                     <h1 className="text-xl font-bold">D&D Scheduler</h1>
@@ -58,7 +58,7 @@ export default function SelectGuild() {
     }
 
     return (
-        <div className="h-screen w-screen flex flex-col overflow-hidden">
+        <div className="h-screen w-screen flex flex-col ">
             {/* Navigation */}
             <nav className="bg-gray-800 text-white p-4 flex justify-between items-center">
                 <Link

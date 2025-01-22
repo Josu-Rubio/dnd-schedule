@@ -1,0 +1,41 @@
+/* styles.css */
+
+/* Base styles for the container */
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 96rem; /* Equivalent to 6xl */
+  margin-left: 50px;
+}
+
+@media (min-width: 1024px) {
+  /* lg:px-8 adjustment for larger screens */
+  .container {
+    padding-left: 5rem;
+    padding-right: 5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: column; /* Stacks items vertically */
+    gap: 0.5rem; /* Smaller gap */
+    padding-left: 3rem;
+    padding-right: 3rem;
+    margin-left: 0rem;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Responsive styles for smaller screens */
+  .container {
+    flex-direction: column; /* Stacks items vertically */
+    gap: 0.5rem; /* Smaller gap */
+    padding-left: 0.1rem;
+    padding-right: 0.1rem;
+    margin-left: 0rem;
+  }
+}

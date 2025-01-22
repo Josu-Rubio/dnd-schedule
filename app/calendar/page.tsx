@@ -83,7 +83,7 @@ export default async function Page({ params, searchParams }: PageProps) {
     const user: User = JSON.parse(userCookie);
 
     return (
-        <div className="h-screen w-screen flex flex-col overflow-hidden">
+        <div className="h-screen w-screen flex flex-col ">
             {/* Navigation */}
             <nav className="bg-gray-800 text-white p-4 flex justify-between items-center">
                 <Link href="/" className="text-white">
