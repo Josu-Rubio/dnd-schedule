@@ -30,7 +30,7 @@ const Loader = () => {
             {/* Loading Spinner */}
             <div className="w-16 h-16 border-4 border-t-4 border-gray-200 rounded-full border-t-violet-600 animate-spin"></div>
 
-            {/* Home Link */}
+
             <Link
                 className="text-white bg-violet-900 px-6 py-3 rounded hover:bg-violet-950 transition duration-200"
                 href="/"
