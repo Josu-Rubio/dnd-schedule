@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { connectToDatabase } from "./dbConnect";
 
 async function getDayModel(guildId: string) {
-    const dbName = guildId === "1214249928772165632" ? "calle" : "test";
+    const dbName = guildId === "1214249928772165632" ? "calle" : "";
     const connection = await connectToDatabase(dbName);
 
     const DaySchema = new mongoose.Schema({
