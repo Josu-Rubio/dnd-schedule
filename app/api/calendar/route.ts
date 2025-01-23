@@ -5,6 +5,8 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const guildId = searchParams.get("guildId");
 
+    console.log("id", guildId)
+
     if (!guildId) {
         return NextResponse.json({ error: "guildId is required" }, { status: 400 });
     }
