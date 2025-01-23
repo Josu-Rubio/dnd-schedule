@@ -21,10 +21,9 @@ export default function SelectGuild() {
 
                 const data = await response.json();
                 setGuilds(data.guilds);
+                setLoading(false); // Stop loading
             } catch (err) {
                 console.log(err.message);
-            } finally {
-                setLoading(false); // Stop loading
             }
         }
 
