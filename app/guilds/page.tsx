@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import Loader from '../components/loader';
@@ -7,10 +7,12 @@ import Image from 'next/image';
 
 export default function SelectGuild() {
     const [guilds, setGuilds] = useState([]);
+    const [loading, setLoading] = useState(true); // New loading state
 
     useEffect(() => {
         async function fetchGuilds() {
             try {
+                setLoading(true); // Start loading
                 const response = await fetch("/api/get-guilds");
 
                 if (!response.ok) {
@@ -21,6 +23,8 @@ export default function SelectGuild() {
                 setGuilds(data.guilds);
             } catch (err) {
                 console.log(err.message);
+            } finally {
+                setLoading(false); // Stop loading
             }
         }
 
@@ -29,14 +33,12 @@ export default function SelectGuild() {
 
     // Redirect to the calendar page with the selected guild information
     const handleSelectGuild = (id: string) => {
-        // Ensure guild.id and guild.name are strings and properly encoded for URL
-        const guildId = encodeURIComponent(id.toString()); // Ensure it's a string and URL-safe
-
-        // Now navigate to the calendar page with the query parameters
+        const guildId = encodeURIComponent(id.toString());
         window.location.href = `/calendar?guildId=${guildId}`;
     };
 
-    if (guilds.length <= 0) {
+    if (loading) {
+        // Show loader while fetching
         return (
             <div className="h-screen w-screen flex flex-col ">
                 {/* Navigation */}
@@ -82,7 +84,6 @@ export default function SelectGuild() {
                                 className="flex items-center justify-center cursor-pointer bg-gray-800 text-white p-4 rounded-lg shadow-lg hover:bg-gray-700 transition-colors m-2"
                                 onClick={() => handleSelectGuild(guild.id)}
                             >
-
                                 <Image
                                     src={guild.icon}
                                     width={100}
@@ -91,7 +92,6 @@ export default function SelectGuild() {
                                     className="w-8 h-8 rounded-full"
                                 />
                                 <span className="m-2 text-lg font-semibold">{guild.name}</span>
-
                             </li>
                         ))}
                     </ul>
