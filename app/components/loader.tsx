@@ -2,29 +2,17 @@
 
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
+
 const Loader = () => {
-    const router = useRouter();
-
-    useEffect(() => {
-        // Redirect after 2 seconds
-        const timer = setTimeout(() => {
-            router.push('/guilds');
-        }, 5000); // Wait for 5 seconds before redirecting
-
-        // Cleanup timeout on unmount
-        return () => clearTimeout(timer);
-    }, [router]);
 
     return (
         <div className="flex flex-col items-center justify-center w-full h-full space-y-8">
             {/* Welcome Section */}
             <div className="text-center" style={{ textShadow: "2px 2px #000000" }}>
                 <h2 className="text-white text-3xl mb-8 font-bold">Bienvenido!</h2>
-                <p className="text-white text-3xl mb-8 font-bold">Si tarda demasiado en cargar, por favor recarga la página</p>
+                <p className="text-white text-3xl mb-8 font-bold">Espere por favor, sólo tomará un segundo</p>
             </div>
 
             {/* Loading Spinner */}
