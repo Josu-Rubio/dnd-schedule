@@ -93,7 +93,12 @@ export default async function Page({ params, searchParams }: PageProps) {
                 <div className="flex items-center space-x-2">
                     {user.avatar && (
                         <Image
-                            src={"/default-avatar.png"}
+                            src={`${user.avatar
+                                ? user.avatar.startsWith('http')
+                                    ? user.avatar
+                                    : `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+                                : '/default-avatar.png'
+                                }`}
                             width={32}
                             height={32}
                             alt={`${user.username} avatar`}
