@@ -89,7 +89,7 @@ export default async function Page({ params, searchParams }: PageProps) {
                 <Link href="/" className="text-white">
                     <h1 className="text-xl font-bold">D&D Scheduler</h1>
                 </Link>
-                {effectiveGuildId === "1214249928772165632" && <Link href="/sessions" className="bg-gray-900 px-4 py-2 rounded hover:bg-gray-950">Sesiones</Link>}
+                {effectiveGuildId === "1214249928772165632" ? <Link href="/sessions" className="bg-gray-900 px-4 py-2 rounded hover:bg-gray-950">Sesiones</Link> : <></>}
                 <div className="flex items-center space-x-2">
                     {user.avatar && (
                         <Image

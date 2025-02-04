@@ -13,6 +13,7 @@ const Loader = () => {
             <div className="text-center" style={{ textShadow: "2px 2px #000000" }}>
                 <h2 className="text-white text-3xl mb-8 font-bold">Bienvenido!</h2>
                 <p className="text-white text-3xl mb-8 font-bold">Espere por favor, sólo tomará un segundo</p>
+                <p className="text-white text-3xl mb-8 font-bold">Si tarda, por favor refresque la página</p>
             </div>
 
             {/* Loading Spinner */}
