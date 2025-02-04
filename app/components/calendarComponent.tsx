@@ -136,6 +136,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
 
         // Send the updated state to the server
         try {
+
             const response = await fetch(
                 `/api/calendar?guildId=${encodeURIComponent(guild.id || '')}`,
                 {
@@ -146,7 +147,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
                         state,
                         userId: user.id,
                         username: user.username,
-                        avatar: user.avatar,
+                        avatar: user.avatar ? user.avatar : "default-avatar.png'",
                         guildId: guild.id,
                     }),
                 }

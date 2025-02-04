@@ -46,6 +46,12 @@ export async function POST(req: Request) {
 
         const { date, state, userId, username, avatar } = await req.json();
 
+        console.log(date, state, userId, username, avatar)
+
+        if (!date || !state || !userId || !username || !avatar) {
+            return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+        }
+
         const DayModel = await getDayModel(guildId);
         const day = await DayModel.findOne({ date });
 
@@ -54,10 +60,9 @@ export async function POST(req: Request) {
             const existingVote = day.votes.find((vote) => vote.userId === userId);
 
             if (existingVote) {
-                // Update the state of the existing vote
                 existingVote.state = state;
+                existingVote.avatar = avatar || existingVote.avatar; // Ensure avatar is never undefined
             } else {
-                // Add a new vote with the current state
                 day.votes.push({ userId, username, avatar, state });
             }
 
