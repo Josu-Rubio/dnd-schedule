@@ -36,13 +36,43 @@ export default async function Page({ params, searchParams }: PageProps) {
         );
     }
 
+
     // Access user cookie on the server
     const userCookie = (await cookies()).get("user")?.value;
-    const guildCookie = (await cookies()).get("guilds")?.value;
+    let guildCookie = (await cookies()).get("guilds")?.value;
 
     if (!guildCookie) {
-        console.error("No guilds found in the cookie.");
-        return null; // Or handle the error appropriately
+        console.warn("No guilds found in the cookie. Using default guild.");
+
+        guildCookie = JSON.stringify([
+            {
+                id: "304091554467807234",
+                name: "La Caverna Del Vicio",
+                icon: "a_57449245f2c0dcc08a7936cd5cc7aeff",
+                banner: "84ac9245d424e8b7f475405d5f3ef68a",
+                owner: false,
+                permissions: 2004877025,
+                permissions_new: "2230883180347105",
+                features: [
+                    "ENABLED_DISCOVERABLE_BEFORE",
+                    "INVITE_SPLASH",
+                    "DISCOVERABLE",
+                    "AUTO_MODERATION",
+                    "PREVIEW_ENABLED",
+                    "CHANNEL_ICON_EMOJIS_GENERATED",
+                    "ANIMATED_ICON",
+                    "MEMBER_VERIFICATION_GATE_ENABLED",
+                    "COMMUNITY",
+                    "SOUNDBOARD",
+                    "WELCOME_SCREEN_ENABLED",
+                    "TEXT_IN_VOICE_ENABLED",
+                    "NEWS",
+                    "NEW_THREAD_PERMISSIONS",
+                    "THREE_DAY_THREAD_ARCHIVE",
+                    "THREADS_ENABLED",
+                ],
+            },
+        ]);
     }
 
     try {
