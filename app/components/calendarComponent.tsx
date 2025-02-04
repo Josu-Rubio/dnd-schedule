@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import './calendarComponent.css'
+import './calendarComponent.css';
 
 type DayState = 'none' | 'green' | 'yellow';
 
@@ -136,7 +136,6 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
 
         // Send the updated state to the server
         try {
-
             const response = await fetch(
                 `/api/calendar?guildId=${encodeURIComponent(guild.id || '')}`,
                 {
@@ -147,7 +146,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
                         state,
                         userId: user.id,
                         username: user.username,
-                        avatar: user.avatar ? user.avatar : "default-avatar.png'",
+                        avatar: user.avatar ? user.avatar : 'default-avatar.png',
                         guildId: guild.id,
                     }),
                 }
@@ -179,8 +178,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
             className='flex-grow flex flex-col justify-center items-center bg-center bg-cover'
             style={{
                 backgroundImage: 'url(/background.jpg)',
-            }}
-        >
+            }}>
             <div className='container'>
                 {/* Calendar Section */}
                 <div className='flex-shrink-0 justify-center items-center w-full lg:w-1/2 p-4 overflow-auto'>
@@ -224,7 +222,9 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
                 </div>
 
                 {/* Right Section (Votes or Message) */}
-                <div className='w-full lg:w-1/2 p-4 bg-white/70 rounded-md shadow-md overflow-auto' style={{ height: 'auto', maxHeight: '600px' }}>
+                <div
+                    className='w-full lg:w-1/2 p-4 bg-white/70 rounded-md shadow-md overflow-auto'
+                    style={{ height: 'auto', maxHeight: '600px' }}>
                     <h1 className='text-center text-xl font-bold mb-2'>
                         <div className='flex items-center justify-center space-x-2'>
                             <Image
@@ -254,7 +254,9 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
                                 <button
                                     className={`text-black bg-green-500 px-6 py-3 rounded hover:bg-green-700 transition duration-200
                             ${dayVotes[hoveredDay]?.votes?.some(
-                                        (vote) => vote.userId === user.id && vote.state === 'green'
+                                        (vote) =>
+                                            vote.userId === user.id &&
+                                            vote.state === 'green'
                                     )
                                             ? 'opacity-50 cursor-not-allowed'
                                             : 'shadow-lg'
@@ -262,14 +264,15 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
                                     disabled={dayVotes[hoveredDay]?.votes?.some(
                                         (vote) => vote.userId === user.id && vote.state === 'green'
                                     )}
-                                    onClick={() => handleVote('green')}
-                                >
+                                    onClick={() => handleVote('green')}>
                                     Me apunto!
                                 </button>
                                 <button
                                     className={`text-black bg-yellow-400 px-6 py-3 rounded hover:bg-yellow-600 transition duration-200
                             ${dayVotes[hoveredDay]?.votes?.some(
-                                        (vote) => vote.userId === user.id && vote.state === 'yellow'
+                                        (vote) =>
+                                            vote.userId === user.id &&
+                                            vote.state === 'yellow'
                                     )
                                             ? 'opacity-50 cursor-not-allowed'
                                             : 'shadow-lg'
@@ -277,14 +280,15 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
                                     disabled={dayVotes[hoveredDay]?.votes?.some(
                                         (vote) => vote.userId === user.id && vote.state === 'yellow'
                                     )}
-                                    onClick={() => handleVote('yellow')}
-                                >
+                                    onClick={() => handleVote('yellow')}>
                                     Quizá
                                 </button>
                                 <button
                                     className={`text-black bg-red-400 px-6 py-3 rounded hover:bg-red-600 transition duration-200
                             ${dayVotes[hoveredDay]?.votes?.some(
-                                        (vote) => vote.userId === user.id && vote.state === 'none'
+                                        (vote) =>
+                                            vote.userId === user.id &&
+                                            vote.state === 'none'
                                     )
                                             ? 'opacity-50 cursor-not-allowed'
                                             : 'shadow-lg'
@@ -294,8 +298,7 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
                                             vote.userId === user.id &&
                                             (vote.state === 'none' || !vote.state)
                                     )}
-                                    onClick={() => handleVote('none')}
-                                >
+                                    onClick={() => handleVote('none')}>
                                     No puedo
                                 </button>
                             </div>
@@ -313,15 +316,16 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
                                                 className='w-10 h-10 rounded-full border-4 border-green-500 '
                                                 style={{
                                                     backgroundImage: `url(${vote.avatar
-                                                        ? vote.avatar.startsWith('http')
-                                                            ? vote.avatar
-                                                            : `https://cdn.discordapp.com/avatars/${vote.userId}/${vote.avatar}.png`
+                                                        ? vote.avatar === 'default-avatar.png'
+                                                            ? '/default-avatar.png'
+                                                            : vote.avatar.startsWith('http')
+                                                                ? vote.avatar
+                                                                : `https://cdn.discordapp.com/avatars/${vote.userId}/${vote.avatar}.png`
                                                         : '/default-avatar.png'
                                                         })`,
                                                     backgroundSize: 'cover',
                                                     backgroundPosition: 'center',
-                                                }}
-                                            ></div>
+                                                }}></div>
                                             <span className='ml-2 font-medium'>{vote.username}</span>
                                         </div>
                                     ))}
@@ -340,22 +344,25 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
                                                 className='w-10 h-10 rounded-full border-4 border-yellow-400 '
                                                 style={{
                                                     backgroundImage: `url(${vote.avatar
-                                                        ? vote.avatar.startsWith('http')
-                                                            ? vote.avatar
-                                                            : `https://cdn.discordapp.com/avatars/${vote.userId}/${vote.avatar}.png`
+                                                        ? vote.avatar === 'default-avatar.png'
+                                                            ? '/default-avatar.png'
+                                                            : vote.avatar.startsWith('http')
+                                                                ? vote.avatar
+                                                                : `https://cdn.discordapp.com/avatars/${vote.userId}/${vote.avatar}.png`
                                                         : '/default-avatar.png'
                                                         })`,
                                                     backgroundSize: 'cover',
                                                     backgroundPosition: 'center',
-                                                }}
-                                            ></div>
+                                                }}></div>
                                             <span className='ml-2 font-medium'>{vote.username}</span>
                                         </div>
                                     ))}
                             </div>
                         </div>
                     ) : (
-                        <p className='text-gray-700 italic'>Selecciona una fecha para ver los votos.</p>
+                        <p className='text-gray-700 italic'>
+                            Selecciona una fecha para ver los votos.
+                        </p>
                     )}
                 </div>
             </div>
@@ -363,26 +370,25 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
             {/* CSS for responsiveness and scroll */}
             <style jsx>{`
         @media (max-width: 768px) {
-            .md\\:w-1\\/2 {
-                width: 100%;
-            }
-            .md\\:flex-row {
-                flex-direction: column;
-            }
-            main {
-                overflow-y: auto;
-            }
-            .overflow-auto {
-                overflow-y: auto;
-            }
+          .md\\:w-1\\/2 {
+            width: 100%;
+          }
+          .md\\:flex-row {
+            flex-direction: column;
+          }
+          main {
+            overflow-y: auto;
+          }
+          .overflow-auto {
+            overflow-y: auto;
+          }
         }
 
         .overflow-auto {
-            overflow-y: auto;
+          overflow-y: auto;
         }
-    `}</style>
-        </main >
-
+      `}</style>
+        </main>
     );
 };
 
