@@ -63,6 +63,18 @@ export async function GET(req: NextRequest) {
     email: userData.email,
   };
 
+  const discordGuildsUrl = "https://discord.com/api/users/@me/guilds";
+
+  const guildsResponse = await fetch(discordGuildsUrl, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  if (!guildsResponse.ok) {
+    return NextResponse.json({ error: "Failed to fetch guilds" }, { status: 500 });
+  }
+
+  const guildsData = await guildsResponse.json();
+
   // Step 4: Store user info in an HTTP-only cookie
   const response = NextResponse.redirect(new URL("/", req.url));
 
@@ -75,6 +87,12 @@ export async function GET(req: NextRequest) {
     httpOnly: true, // Ensures cookie isn't accessible to client-side scripts
     secure: isProduction, // Set to `true` for production and `false` for local development
     sameSite: "strict", // Ensures the cookie is sent only in first-party contexts
+  });
+  response.cookies.set("guilds", JSON.stringify(guildsData), {
+    path: "/",
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: "strict",
   });
 
   return response;
