@@ -37,9 +37,10 @@ const Screen = () => {
     // Example list of YouTube video links and titles
     const videos = [
         { id: "video1", youtubeLink: "https://www.youtube.com/embed/x76EGAzfXUc", title: "00. Despedida de Calas" },
-        // { id: "video2", youtubeLink: "https://www.youtube.com/embed/tgbNymZ7vqY", title: "Video 2" },
+        { id: "video2", youtubeLink: "https://www.youtube.com/embed/CVkv67jwB9E", title: "01. Mercado de Skaler" },
         // { id: "video3", youtubeLink: "https://www.youtube.com/embed/ScMzIvxBSi4", title: "Video 3" },
     ];
+
 
     return (
         <main
