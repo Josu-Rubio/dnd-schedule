@@ -39,7 +39,7 @@ export default async function Page({ params, searchParams }: PageProps) {
 
     // Access user cookie on the server
     const userCookie = (await cookies()).get("user")?.value;
-    let guildCookie = (await cookies()).get("guilds")?.value;
+    const guildCookie = (await cookies()).get("guilds")?.value;
 
     // if (!guildCookie) {
     //     console.warn("No guilds found in the cookie. Using default guild.");
