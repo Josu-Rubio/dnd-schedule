@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
 
     // Define the allowed guild IDs
     const allowedGuildIds = [
-        "304091554467807234", // ID for "La Caverna del Vicio"
+        // "304091554467807234", // ID for "La Caverna del Vicio"
         "1214249928772165632", // ID for "Nos falta calle"
     ];
 
