@@ -47,7 +47,7 @@ export async function GET() {
             const embedMonday = {
                 title: "Let's rol this week! 🎲",
                 description: `Votad para ver qué días se pueden jugar la semana que viene.\n\n**Fechas disponibles:**\n${startDate} - ${endDate}\n\nGracias por participar en la planificación de nuestras partidas. ¡Esperamos veros allí!`,
-                url: 'https://dnd-schedule.vercel.app/',
+                url: 'https://schedule.josuerubio.com/',
                 color: 0x00ff00, // Green color
                 footer: {
                     text: 'Organizado por Roleros',
